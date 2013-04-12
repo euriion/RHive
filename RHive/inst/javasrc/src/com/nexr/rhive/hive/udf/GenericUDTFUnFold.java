@@ -24,7 +24,7 @@ import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDTF;
-import org.apache.hadoop.hive.serde.serdeConstants;
+import org.apache.hadoop.hive.serde.Constants;
 import org.apache.hadoop.hive.serde2.io.DoubleWritable;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
@@ -101,22 +101,22 @@ public class GenericUDTFUnFold extends GenericUDTF {
     }
     
     private ObjectInspector getColumnInspector(String typeName) throws IllegalArgumentException {
-        if (typeName.equals(serdeConstants.INT_TYPE_NAME)) {
+        if (typeName.equals(Constants.INT_TYPE_NAME)) {
             return PrimitiveObjectInspectorFactory.writableIntObjectInspector;
-        } else if (typeName.equals(serdeConstants.DOUBLE_TYPE_NAME)) {
+        } else if (typeName.equals(Constants.DOUBLE_TYPE_NAME)) {
             return PrimitiveObjectInspectorFactory.writableDoubleObjectInspector;
-        } else if (typeName.equals(serdeConstants.STRING_TYPE_NAME)) {
+        } else if (typeName.equals(Constants.STRING_TYPE_NAME)) {
             return PrimitiveObjectInspectorFactory.writableStringObjectInspector;
         } else
             throw new IllegalArgumentException("can't support this type " + typeName);
     }
     
     private Writable getColumnWritable(String typeName) throws IllegalArgumentException {
-        if (typeName.equals(serdeConstants.INT_TYPE_NAME)) {
+        if (typeName.equals(Constants.INT_TYPE_NAME)) {
             return new IntWritable(0);
-        } else if (typeName.equals(serdeConstants.DOUBLE_TYPE_NAME)) {
+        } else if (typeName.equals(Constants.DOUBLE_TYPE_NAME)) {
             return new DoubleWritable(0.0);
-        } else if (typeName.equals(serdeConstants.STRING_TYPE_NAME)) {
+        } else if (typeName.equals(Constants.STRING_TYPE_NAME)) {
             return new Text();
         } else
             throw new IllegalArgumentException("can't support this type : " + typeName);
@@ -173,18 +173,19 @@ public class GenericUDTFUnFold extends GenericUDTF {
             }
             
             for (int i = 0; i < numCols; ++i) {
-                
-                if (originStrs[i] == null)
+                if (originStrs[i] == null) {
                     retCols[i] = cols[i]; // use the object pool rather than creating a new object
-                    
+                }
                 switch (data_types[i]) {
                     case STRING:
                         ((Text) retCols[i]).set(originStrs[i]);
                         break;
                     case DOUBLE:
+                        // need to remove quotation marks (aiden.hong, 2013-04-13)
                         ((DoubleWritable) retCols[i]).set(Double.parseDouble(originStrs[i]));
                         break;
                     case INT:
+                        // need to remove quotation marks (aiden.hong, 2013-04-13)
                         ((IntWritable) retCols[i]).set((int) Double.parseDouble(originStrs[i]));
                         break;
                     case NULLNAME:

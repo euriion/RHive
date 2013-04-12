@@ -89,7 +89,7 @@ public class GenericUDTFUnFold extends GenericUDTF {
         ArrayList<ObjectInspector> fieldOIs = new ArrayList<ObjectInspector>(numCols);
         for (int i = 0; i < numCols; ++i) {
             // column name can be anything since it will be named by UDTF as clause
-            fieldNames.add("c" + i);
+            fieldNames.add("c" + (i + 1));
             // all returned type will be primitive type
             fieldOIs.add(getColumnInspector(args[i + 1].getTypeName()));
             cols[i] = getColumnWritable(args[i + 1].getTypeName());
@@ -107,8 +107,9 @@ public class GenericUDTFUnFold extends GenericUDTF {
             return PrimitiveObjectInspectorFactory.writableDoubleObjectInspector;
         } else if (typeName.equals(Constants.STRING_TYPE_NAME)) {
             return PrimitiveObjectInspectorFactory.writableStringObjectInspector;
-        } else
+        } else {
             throw new IllegalArgumentException("can't support this type " + typeName);
+        }
     }
     
     private Writable getColumnWritable(String typeName) throws IllegalArgumentException {
@@ -118,8 +119,9 @@ public class GenericUDTFUnFold extends GenericUDTF {
             return new DoubleWritable(0.0);
         } else if (typeName.equals(Constants.STRING_TYPE_NAME)) {
             return new Text();
-        } else
+        } else {
             throw new IllegalArgumentException("can't support this type : " + typeName);
+        }
     }
     
     @Override
@@ -173,19 +175,20 @@ public class GenericUDTFUnFold extends GenericUDTF {
             }
             
             for (int i = 0; i < numCols; ++i) {
-                
-                if (originStrs[i] == null)
+                if (originStrs[i] == null) {
                     retCols[i] = cols[i]; // use the object pool rather than creating a new object
-                    
+                }
                 switch (data_types[i]) {
                     case STRING:
                         ((Text) retCols[i]).set(originStrs[i]);
                         break;
                     case DOUBLE:
-                        ((DoubleWritable) retCols[i]).set(Double.parseDouble(originStrs[i]));
+                        // need to remove quotation marks (aiden.hong, 2013-04-13)
+                        ((DoubleWritable) retCols[i]).set(Double.parseDouble(originStrs[i].replaceAll("'", "").replaceAll("\"", "")));
                         break;
                     case INT:
-                        ((IntWritable) retCols[i]).set((int) Double.parseDouble(originStrs[i]));
+                        // need to remove quotation marks (aiden.hong, 2013-04-13)
+                        ((IntWritable) retCols[i]).set((int) Double.parseDouble(originStrs[i].replaceAll("'", "").replaceAll("\"", "")));
                         break;
                     case NULLNAME:
                     default:
@@ -218,7 +221,6 @@ public class GenericUDTFUnFold extends GenericUDTF {
      */
     public void close() throws HiveException {
         // TODO Auto-generated method stub
-        
     }
     
     private String[] parseString(String originStr, String delim) {

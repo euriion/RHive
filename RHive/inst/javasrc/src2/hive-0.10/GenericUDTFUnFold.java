@@ -182,10 +182,12 @@ public class GenericUDTFUnFold extends GenericUDTF {
                         ((Text) retCols[i]).set(originStrs[i]);
                         break;
                     case DOUBLE:
-                        ((DoubleWritable) retCols[i]).set(Double.parseDouble(originStrs[i]));
+                        // need to remove quotation marks
+                        ((DoubleWritable) retCols[i]).set(Double.parseDouble(originStrs[i].replaceAll("'", "").replaceAll("\"", "")));
                         break;
                     case INT:
-                        ((IntWritable) retCols[i]).set((int) Double.parseDouble(originStrs[i]));
+                        // need to remove quotation marks
+                        ((IntWritable) retCols[i]).set((int) Double.parseDouble(originStrs[i].replaceAll("'", "").replaceAll("\"", "")));
                         break;
                     case NULLNAME:
                     default:

@@ -1,3 +1,8 @@
+2013-04-13
+
+    * RHive version is updated to 1.0-0.1
+    * fixed the bug of unfold UDF which a value including quotations in the value
+
 2013-03-12
 
     * rhive-0.0-7.1 release
@@ -6,7 +11,6 @@
       - rhive.show.databases
       - rhive.use.databases
       - rhive.show.tables
-      
 
 2013-1-6
 
