@@ -26,6 +26,7 @@
     </target>
 
     <target name="copy.hive10.files">
+        <echo message=" ***** copying stuffs for Hive-0.10 ***** " />
         <copy file="${java.src.dir}/build_hive10.xml" tofile="${java.src.dir}/build.xml" overwrite="true"/>
         <copy todir="${src.dir}/com/nexr/rhive/hive/udf/" overwrite="true">
             <fileset dir="${src.dir.hive-0.10}"/>
@@ -33,6 +34,7 @@
     </target>
 
     <target name="copy.hive.files">
+        <echo message=" ***** copying stuffs for Hive-0.9 ***** " />
         <copy file="${java.src.dir}/build_hive9.xml" tofile="${java.src.dir}/build.xml" overwrite="true"/>
         <copy todir="${src.dir}/com/nexr/rhive/hive/udf/" overwrite="true">
             <fileset dir="${src.dir.hive-0.9}">
