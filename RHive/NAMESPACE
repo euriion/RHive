@@ -1,6 +1,8 @@
 importFrom("utils", "packageDescription")
 importFrom("tools","file_path_as_absolute")
 import("rJava")
+import("RJDBC")
+exportPattern("rhive.version")
 exportPattern("rhive.init")
 exportPattern("rhive.env")
 exportPattern("rhive.assign")

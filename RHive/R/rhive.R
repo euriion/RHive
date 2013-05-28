@@ -13,6 +13,17 @@
 # limitations under the License.
 
 
+rhive.version <- function() {
+  packageList <- installed.packages()
+  if (any(rownames(packageList) == "RHive1") == FALSE) {
+    cat("RHive is not installed\n")
+    return(NULL)
+  } else {
+    return(packageList["RHive", "Version"])
+  }
+}
+
+
 rhive.init <- function(hive=NULL, libs=NULL, hadoop_home=NULL, hadoop_conf=NULL, hlibs=NULL, verbose=FALSE) {
   if (is.null(hive)) hive <- Sys.getenv("HIVE_HOME")
   

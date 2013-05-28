@@ -17,6 +17,7 @@
   as well as querying hive.
 } 
 \seealso{
+rhive.version
 rhive.init
 rhive.connect
 rhive.query
